@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.menutest.MainActivity" >
+
+    <item
+        android:id="@+id/start"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="Create"
+        tools:ignore="AppCompatResource" />
+
+
+
+</menu>
