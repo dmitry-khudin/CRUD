@@ -52,12 +52,12 @@ public class LoadingFooter extends LinearLayout implements LoadMoreFooter {
             case LOADING_STATE_PREPARE:
                 setVisibility(VISIBLE);
                 pb.setVisibility(INVISIBLE);
-                tv.setText("释放加载更多");
+                tv.setText("Pull_down");
                 break;
             case LOADING_STATE_LOAD:
                 setVisibility(VISIBLE);
                 pb.setVisibility(VISIBLE);
-                tv.setText("加载中");
+                tv.setText("loading...");
                 break;
             case LOADING_STATE_COMPLETE:
                 setState(LOADING_STATE_NORMAL);

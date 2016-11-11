@@ -25,12 +25,7 @@ public abstract class RvLoadMoreAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    /**
-     * 加载更多的监听事件
-     *
-     * @param recyclerView 监听的recycleview
-     * @param listener     回调
-     */
+
     public void setLoadMoreListener(RecyclerView recyclerView, RVLoadMoreRvOnScrollListener listener) {
         recyclerView.addOnScrollListener(listener);
         this.listener = listener;
@@ -85,28 +80,13 @@ public abstract class RvLoadMoreAdapter extends RecyclerView.Adapter {
         return footerTv;
     }
 
-    /**
-     * 等同getItemCount
-     *
-     * @return item个数
-     */
+
     public abstract int getRvItemCount();
 
-    /**
-     * 等同getItemViewType
-     *
-     * @param position 对应的position
-     * @return viewtype，footer的viewtype值为{@link RvLoadMoreAdapter#FOOTER_VIEWTYPE}。
-     */
+
     public abstract int getRvItemViewType(int position);
 
-    /**
-     * 等同onCreateViewHolder
-     *
-     * @param parent   父view，这里是recycleview
-     * @param viewType viewtype，footer的viewtype值为{@link RvLoadMoreAdapter#FOOTER_VIEWTYPE}。
-     * @return {@link android.support.v7.widget.RecyclerView.ViewHolder}。
-     */
+
     public abstract RecyclerView.ViewHolder onRvCreateViewHolder(ViewGroup parent, int viewType);
 
     public abstract void onRvBindViewHolder(RecyclerView.ViewHolder holder, int position);
