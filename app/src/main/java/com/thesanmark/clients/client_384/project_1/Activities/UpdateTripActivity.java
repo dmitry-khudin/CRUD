@@ -4,11 +4,14 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.okhttp.MultipartBuilder;
@@ -18,7 +21,10 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import com.thesanmark.clients.client_384.project_1.Models.TripModel;
 import com.thesanmark.clients.R;
@@ -44,6 +50,54 @@ public class UpdateTripActivity extends BaseActivity implements TimePickerDialog
         model = (TripModel) bundle.get("trip");
         initiView();
     }
+
+    void display (EditText editText, String str)
+    {
+        if (str.equals("null"))
+        {
+            editText.setText("");
+        }
+        else
+            editText.setText(str);
+
+    }
+
+    Double getValueFromString(String str)
+    {
+        if (str.equals("null") || str.equals("")) return 0.0;
+        return Double.valueOf(str);
+
+    }
+
+    String getDiffDate(String str1, String str2)
+    {
+
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+
+        Log.d("time", str1 + "," + str2);
+        Date d1 = null;
+        Date d2 = null;
+        try {
+            d1 = format.parse(str1);
+            d2 = format.parse(str2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Get msec from each, and subtract.
+        long time1, time2;
+        if (d2 == null) {time2 = 0; Log.d("tag", "01");} else time2 = d2.getTime();
+        if (d1 == null) {time1 = 0;Log.d("tag", "02");} else time1 = d1.getTime();
+        long diff = time2 - time1;
+        long diffSeconds = diff / 1000 % 60;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000);
+
+        String result = String.format("%02d:%02d:%02d", diffHours, diffMinutes, diffSeconds);
+        return result;
+
+    }
     private void initiView() {
         editText1 = (EditText) findViewById(R.id.editText3);
         editText2 = (EditText) findViewById(R.id.editText4);
@@ -59,18 +113,30 @@ public class UpdateTripActivity extends BaseActivity implements TimePickerDialog
         editText12 = (EditText) findViewById(R.id.editText13);
         editText13 = (EditText) findViewById(R.id.editText14);
         editText14 = (EditText) findViewById(R.id.editText19);
-        editText1.setText(model.getStart_date());
-        editText2.setText(model.getStart_time());
-        editText3.setText(model.getStart_latitude());
-        editText4.setText(model.getStart_longitude());
-        editText5.setText(model.getStart_odometer());
-        editText6.setText(model.getPurpose());
-        editText7.setText(model.getClient());
-        editText8.setText(model.getEnd_date());
-        editText9.setText(model.getEnd_time());
-        editText10.setText(model.getEnd_latitude());
-        editText14.setText(model.getEnd_longitude());
-        editText11.setText(model.getEnd_odometer());
+        display(editText1, model.getStart_date());
+        display(editText2, model.getStart_time());
+        display(editText3, model.getStart_latitude());
+        display(editText4, model.getStart_longitude());
+        display(editText5, model.getStart_odometer());
+        display(editText6, model.getPurpose());
+        display(editText7, model.getClient());
+        display(editText8, model.getEnd_date());
+        display(editText9, model.getEnd_time());
+        display(editText11, model.getEnd_odometer());
+//        display(editText14, model.getStart_date());
+//        display(editText11, model.getStart_date());
+//        editText1.setText(model.getStart_date());
+//        editText2.setText(model.getStart_time());
+//        editText3.setText(model.getStart_latitude());
+//        editText4.setText(model.getStart_longitude());
+//        editText5.setText(model.getStart_odometer());
+//        editText6.setText(model.getPurpose());
+//        editText7.setText(model.getClient());
+//        editText8.setText(model.getEnd_date());
+//        editText9.setText(model.getEnd_time());
+//
+//        editText11.setText(model.getEnd_odometer());
+         editText13.setText(getDiffDate(model.getEnd_date() + " " + model.getEnd_time(), model.getStart_date() + " " + model.getStart_time()));
         editText1.setKeyListener(null);
         editText2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,9 +252,45 @@ public class UpdateTripActivity extends BaseActivity implements TimePickerDialog
         });
         GPSTracker tracker = new GPSTracker(this);
 
-        editText3.setText(String.format("%.3f", tracker.getLatitude()));
-        editText4.setText(String.format("%.3f", tracker.getLongitude()));
+//        editText3.setText(String.format("%.3f", tracker.getLatitude()));
+//        editText4.setText(String.format("%.3f", tracker.getLongitude()));
+        editText10.setText(String.format("%.3f", tracker.getLatitude()));
+        editText14.setText(String.format("%.3f", tracker.getLongitude()));
+        editText5.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                        actionId == EditorInfo.IME_ACTION_DONE ||
+                        actionId == EditorInfo.IME_ACTION_NEXT ||
+                        actionId == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    {
+                        // the user is done typing.
+                        editText12.setText(String.valueOf(getValueFromString(editText11.getText().toString()) - getValueFromString(editText5.getText().toString())));
+                        Toast.makeText(getApplicationContext(), "sadfa", Toast.LENGTH_LONG).show();
+                        return true; // consume.
+                    }
+                }
+                return false; // pass on to other listeners.
+            }
+        });
 
+        editText11.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                        actionId == EditorInfo.IME_ACTION_DONE ||
+                        actionId == EditorInfo.IME_ACTION_NEXT ||
+                        actionId == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    {
+                        // the user is done typing.
+                        Toast.makeText(getApplicationContext(), "sadfa", Toast.LENGTH_LONG).show();
+                        editText12.setText(String.valueOf(getValueFromString(editText11.getText().toString()) - getValueFromString(editText5.getText().toString())));
+                        return true; // consume.
+                    }
+                }
+                return false; // pass on to other listeners.
+            }
+        });
     }
 
     private void UpdateTripPost()
@@ -217,6 +319,7 @@ public class UpdateTripActivity extends BaseActivity implements TimePickerDialog
         end_latitude = editText10.getText().toString().trim();
         end_longitude = editText14.getText().toString().trim();
         end_octom = editText11.getText().toString().trim();
+        editText12.setText(String.valueOf(getValueFromString(model.getEnd_odometer()) - getValueFromString(model.getStart_odometer())));
         Log.d("start_time", start_time);
         String url = Constants.server_url + Constants.all_trips + "/" + model.getID();
         OkHttpClient client = new OkHttpClient();
@@ -280,6 +383,7 @@ public class UpdateTripActivity extends BaseActivity implements TimePickerDialog
         String date = String.format("%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth);
         if (date_flag == 1)       editText1.setText(date);
         else if (date_flag == 2) editText8.setText(date);
+        editText13.setText(getDiffDate(editText8.getText().toString() + " " + editText9.getText().toString(), editText1.getText().toString() + " " + editText2.getText().toString()));
     }
 
     @Override
@@ -291,6 +395,9 @@ public class UpdateTripActivity extends BaseActivity implements TimePickerDialog
         time = String.format("%02d:%02d", hourOfDay, minute);
         if (time_flag == 1) editText2.setText(time);
         else if (time_flag == 2) editText9.setText(time);
+
+        editText13.setText(getDiffDate(editText8.getText().toString() + " " + editText9.getText().toString(), editText1.getText().toString() + " " + editText2.getText().toString()));
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -320,8 +427,6 @@ public class UpdateTripActivity extends BaseActivity implements TimePickerDialog
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.update:
-
-
 //                Toast.makeText(this, "开始游戏", Toast.LENGTH_SHORT).show();
                 break;
             default:

@@ -50,6 +50,7 @@ public class NewTripActivity extends BaseActivity implements TimePickerDialog.On
     final String DATEPICKER = "datepickerdialog";
 
     Button button;
+
     String start_date, start_time, end_date, end_time, start_latitude, start_longitude,
             start_octom, client, purpose, end_latitude, end_longitude, end_octom, total_kilometers, total_time;
     int time_flag, date_flag;
@@ -236,6 +237,8 @@ public class NewTripActivity extends BaseActivity implements TimePickerDialog.On
         editText3 = (EditText) findViewById(R.id.editText5);
         editText4 = (EditText) findViewById(R.id.editText18);
         editText5 = (EditText) findViewById(R.id.editText6);
+        editText6 = (EditText) findViewById(R.id.editText7);
+        editText7 = (EditText) findViewById(R.id.editText8);
         editText1.setKeyListener(null);
         editText2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,8 +307,11 @@ public class NewTripActivity extends BaseActivity implements TimePickerDialog.On
         start_longitude = editText4.getText().toString().trim();
         start_octom = editText5.getText().toString().trim();
 
+        client = editText6.getText().toString().trim();
+        purpose = editText7.getText().toString().trim();
+
         String url = Constants.server_url + Constants.all_trips;
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient web_client = new OkHttpClient();
         RequestBody requestBody = new MultipartBuilder()
                 .type(MultipartBuilder.FORM) //this is what I say in my POSTman (Chrome plugin)
                 .addFormDataPart(Constants.start_time, start_time)
@@ -313,6 +319,8 @@ public class NewTripActivity extends BaseActivity implements TimePickerDialog.On
                 .addFormDataPart(Constants.start_longitude, start_longitude)
                 .addFormDataPart(Constants.start_latitude, start_latitude)
                 .addFormDataPart(Constants.start_odometer, start_octom)
+                .addFormDataPart(Constants.client_name, client)
+                .addFormDataPart(Constants.purpose, purpose)
                 .build();
         com.squareup.okhttp.Request request = new com.squareup.okhttp.Request .Builder()
                 .url(url)
@@ -321,7 +329,7 @@ public class NewTripActivity extends BaseActivity implements TimePickerDialog.On
                 .post(requestBody)
                 .build();
         try {
-            com.squareup.okhttp.Response response = client.newCall(request).execute();
+            com.squareup.okhttp.Response response = web_client.newCall(request).execute();
             String responseString = response.body().string();
 
             response.body().close();
@@ -338,6 +346,7 @@ public class NewTripActivity extends BaseActivity implements TimePickerDialog.On
                     Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
                 }
             });
+            finish();
             Log.d("str-token", Constants.str_token);
 //            Intent intent = new Intent(NewTripActivity.this, TripListActivity.class);
 //            startActivity(intent);
