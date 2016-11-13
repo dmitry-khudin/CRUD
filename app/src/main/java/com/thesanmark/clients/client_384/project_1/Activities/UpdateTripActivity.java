@@ -266,7 +266,7 @@ public class UpdateTripActivity extends BaseActivity implements TimePickerDialog
                     {
                         // the user is done typing.
                         editText12.setText(String.valueOf(getValueFromString(editText11.getText().toString()) - getValueFromString(editText5.getText().toString())));
-                        Toast.makeText(getApplicationContext(), "sadfa", Toast.LENGTH_LONG).show();
+                      //  Toast.makeText(getApplicationContext(), "sadfa", Toast.LENGTH_LONG).show();
                         return true; // consume.
                     }
                 }
@@ -283,7 +283,7 @@ public class UpdateTripActivity extends BaseActivity implements TimePickerDialog
                         actionId == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
                     {
                         // the user is done typing.
-                        Toast.makeText(getApplicationContext(), "sadfa", Toast.LENGTH_LONG).show();
+                   //     Toast.makeText(getApplicationContext(), "sadfa", Toast.LENGTH_LONG).show();
                         editText12.setText(String.valueOf(getValueFromString(editText11.getText().toString()) - getValueFromString(editText5.getText().toString())));
                         return true; // consume.
                     }
